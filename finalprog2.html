@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<!-- Pablo Duque -->
+
+
+<html>
+
+ <head>
+
+  
+  <script src="cuon-matrix.js"></script>
+  <script src="cuon-utils.js"></script>
+  <script src="webgl-debug.js"></script>
+  <script src="webgl-utils.js"></script>
+  <script src="finalprog2.js"></script>
+  
+
+
+  <title>finalprog2</title>
+</head>
+  <body onload="preinit()">
+  
+    <script id="vertexTextureShader" type="x-shader/x-vertex">
+      precision mediump float;
+
+      uniform mat4 projectionMatrix;
+      uniform mat4 viewMatrix;
+      uniform mat4 modelMatrix;
+      uniform vec4 lightPosition;
+
+      varying vec3 fragmentNormal;
+      varying vec3 fragmentLight;
+      varying vec3 fragmentView;
+
+      attribute vec3 vertexNormal;
+      attribute vec4 vertexPosition;
+      attribute vec2 vertexTexCoord;
+
+      varying vec2 fragmentTexCoord;
+
+      void main(){
+        fragmentTexCoord = vertexTexCoord;
+
+        mat4 modelViewMatrix = viewMatrix*modelMatrix;
+
+        vec4 p = modelViewMatrix*vertexPosition;
+        vec4 q = viewMatrix*lightPosition;
+
+        fragmentNormal = normalize(mat3(modelViewMatrix)*vertexNormal);
+        fragmentLight = normalize(vec3(q-p));
+        fragmentView = normalize(vec3(-p));
+
+        gl_Position = projectionMatrix*viewMatrix*modelMatrix*vertexPosition;
+
+      }
+
+
+    </script>
+    <script id="textureShader" type="x-shader/x-fragment">
+      precision mediump float;
+
+      varying vec2 fragmentTexCoord;
+
+      varying vec3 fragmentNormal;
+      varying vec3 fragmentLight;
+      varying vec3 fragmentView;
+
+      uniform vec3 lightColor;
+
+      uniform sampler2D modelTexture;
+
+      void main(){
+
+        vec3 n = normalize(fragmentNormal);
+        vec3 l = normalize(fragmentLight);
+        vec3 v = normalize(fragmentView);
+        vec3 h = normalize(l+v);
+
+        float d = max(dot(l,n), 0.0);
+        float s = pow(max(dot(h,n), 0.0), 50.0);
+
+       
+        vec4 modelColor = texture2D(modelTexture, fragmentTexCoord);
+        vec4 fragmentColor = (modelColor*vec4(lightColor,1.0)*d) + (vec4(lightColor,1.0)*s);
+        gl_FragColor = modelColor;
+    
+      }
+    </script>
+
+    <canvas id="webgl" width="800px" height="800px"></canvas>
+
+  </body>
+</html>
