@@ -1,2 +1,8 @@
 # liblessTerrainWebgl
-Just a quick example on how to create a simple terrain from a heigth map picture without using THREE.js, BABYLON.js or any other library. Just javascript and WebGl
+
+## Demo
+
+1. Import all repository
+2. Open HTML file
+3. Toggle terrain by clicking on it and dragging mouse pointer
+
