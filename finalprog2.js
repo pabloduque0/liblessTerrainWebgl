@@ -3,11 +3,7 @@
 var canvas;
 var gl;
 
-var teapotModel;
-var cowModel;
-var planeModel;
-
-var chestModel;
+var terrainModel;
 
 var projectionMatrix;
 var viewMatrix;
@@ -54,7 +50,7 @@ function preinit(){
 	heightmapimage.src = "http://i.imgur.com/C5mrWVR.jpg";
     
 }
-// Having the Y component from the heigth map, generate the mesh
+// Having the Y component from the height map, generate the mesh
 function generateMesh(Ycomponent){
 
     var matrix = [];
@@ -90,7 +86,7 @@ function generateMesh(Ycomponent){
 
 }
 
-// Analize image to get heigth points
+// Analize image to get height points
 function getHeightData(img) {
 
 	
@@ -267,7 +263,7 @@ function init(){
 
 	// Initiate our shader and model
 	textureShader = new Shader('vertexTextureShader', 'textureShader');
-	chestModel = new Model();
+	terrainModel = new Model();
 
 	// Texture initialization
 	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
@@ -317,7 +313,7 @@ function draw() {
 	
 	// Use our shader and render our model
 	textureShader.use(projectionMatrix, viewMatrix, terrainModelMatrix);
-	chestModel.render(textureShader);
+	terrainModel.render(textureShader);
 }
 
 
